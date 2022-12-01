@@ -23,7 +23,7 @@
 \title{Topic: Hierarchical Path-Finding}
 \titleheader{Research Paper on Hierarchical Path-Finding}
 \author{Addie Audette, Bug Lee, Annorah Lewis, Luke Marks}
-\date{November 28, 2022}
+\date{December 1, 2022}
 
 \begin{document}
 \maketitle
@@ -32,9 +32,9 @@
 \subsection{The Motivation}
 The problem of finding an optimal path arises in many application domains including navigation, robotics, networking, and video games. There are different flavors of algorithms that correctly find the shortest path between two nodes in a graph.  
 
-In an unweighted graph, Breath-first search (BFS) is the goto algorithm. For a more general graph where an edge weight can contain either a positive or negative value, the Bellman-Ford algorithm is capable of finding the shortest path between two nodes. However, when the problem domain is restricted to only containing non-negative edge weights, the Dijkstra can find the shortest path with less computation demand than the Bellman-Ford. Nowadays, the A* algorithm, the successor of Dijkstra, is more commonly used as it demands even less computation with the help of an admissible heuristic function. 
+In an unweighted graph, Breath-first search (BFS) is the go-to algorithm. For a more general graph where an edge weight can contain either a positive or negative value, the Bellman-Ford algorithm is capable of finding the shortest path between two nodes. However, when the problem domain is restricted to only containing non-negative edge weights, the Dijkstra can find the shortest path with less computation demand than the Bellman-Ford. Nowadays, the A* algorithm, the successor of Dijkstra, is more commonly used as it demands even less computation with the help of an admissible heuristic function. 
 
-However, the naive A* algorithm is no longer sufficient for modern real-time applications. Given the sheer size of the nodes for the graph in modern applications, computation demands are too high to run a naive A* algorithm simultaneously for hundreds, if not thousands, of agents. Thus, like many problems in computer science, adding a hierarchy is a solution to reduce the complexity of the problem.
+However, the naive A* algorithm is no longer sufficient for modern real-time applications. Given the sheer size of the nodes for the graph in modern applications, computation demands are too high to run a naive A* algorithm simultaneously for hundreds, if not thousands, of agents \cite{Botea2004NearOH}. Thus, like many problems in computer science, adding a hierarchy is a solution to reduce the complexity of the problem.
 
 \section{Dijkstra algorithm}
 \subsection{Shortest-path tree}
@@ -91,7 +91,7 @@ The following pseudocode was adapted from \textit{Introduction to Algorithms} by
 \li $\textsc{Initialize-Single-Source}(G,s)$
 \li $S = \emptyset$ \hspace{0.5cm}\Comment Set of vertices that shortest path from $s$ is known  
 \li $Q = \emptyset$ \hspace{0.5cm}\Comment Min-priority Queue
-\li                 \hspace{1.5cm}\Comment Q also holds unvisited vertices.
+\li                 \hspace{1.5cm}\Comment Q holds unvisited vertices.
 \li \For each vertex $u \in G.V$
 \li     \Do
             $\textsc{Insert}(Q,u)$
@@ -126,8 +126,6 @@ In the other words, any other path to $v$ must be longer than or equal to the pa
 Therefore, Dijkstra output the shortest path for all $u \in V$ by the end of the execution when $|S| = |V|$.
 
 
-\subsection{Runtime Analysis}
-
 \section{A* algorithm}
 \subsection{"Dijkstra with a twist" \cite{Buckland}}
 Most often, finding a path from $s$ to some target vertex $t$ using Dijkstra is overkill. Dijkstra algorithm finds the shortest path to all vertices from $s$ when the application only needs one shortest path from $s$ to $t$. So, the following modifications on the Dijkstra algorithm can give out better performance for finding the shortest path from $s$ to $t$. 
@@ -135,7 +133,7 @@ Most often, finding a path from $s$ to some target vertex $t$ using Dijkstra is 
     \item Dijkstra algorithm blindly selects vertex with minimum distance from $s$ each step. Instead, make a clever guess in each step where the algorithm selects a vertex that is likely part of the shortest path from $s$ to $t$.\cite{Buckland, HNR}
     \item Terminate once the shortest path from $s$ to $t$ is found.
 \end{itemize}
-The above modification on Dijkstra is known as the A* algorithm. Given that the A* algorithm makes an appropriate guess for each step, the A* algorithm guaranteed to return shortest path between source to goal vertex. Also, the A* algorithm computationally more efficient than Dijkstra since it avoids adding unrelated shortest paths to vertices other than $t$. The guessing stretegy that A* must implement is known as admissible heuristic function.
+The above modification on Dijkstra is known as the A* algorithm. Given that the A* algorithm makes an appropriate guess for each step, the A* algorithm guaranteed to return shortest path between source to target vertex. Also, the A* algorithm computationally more efficient than Dijkstra since it avoids adding unrelated shortest paths to vertices other than $t$. The guessing stretegy that A* must implement is known as admissible heuristic function.
 
 \subsection{Admissible Heuristic}
 For A* to work correctly and efficiently, the A* algorithm must guess each step that
@@ -145,9 +143,9 @@ For A* to work correctly and efficiently, the A* algorithm must guess each step 
     \item Admissiblity: \\
     Should not ignore the sub-path that can be part of the optimal path\cite{HNR}.  
 \end{itemize}
-In many situations, there is extra information available for the given problem domain other than the distance between two vertices. For example, imagine finding the shortest route between two cities in the road network. Not only do we know the distance between two pairs of cities, but also know how all cities are positioned on the map. From this, we would unlikely consider traveling to a city in the opposite direction of a destination even if it is located close to the source. Rather, we would first consider a nearby city on the way to the destination. 
+In many situations, there is extra information available for the given problem domain other than the distance between two vertices. For example, imagine finding the shortest route between two cities in the road network. Not only do we know the distance between two pairs of cities, but also know how all cities are positioned on the map. From this, we would unlikely consider traveling to a city in the opposite direction of a destination even if it is located close to the source. Rather, we would consider a nearby city closer to the destination unless it is deadend. 
 
-In the above example, we considered the euclidian distance between a city and the destination in addition to the distance to reach the city. Knowing the euclidian distance was a heuristic to make an appropriate guess. That is, the goal was to select a city with minimum cost $f = g(v) + h(v)$, where $g(v)$ is the exact distance to reach some city $v$ and $h(v)$ is the euclidian distance between city $v$ to destination. The guessing was also admissible since it is certain that the road route cannot be shorter than the euclidian distance between them\cite{HNR}
+In the above example, we considered the euclidian distance between a city and the destination in addition to the distance to reach the city. Knowing the euclidian distance was a heuristic to make an appropriate guess. That is, the goal was to select a city with minimum cost $f = g(v) + h(v)$, where $g(v)$ is the exact distance to reach some city $v$ and $h(v)$ is the euclidian distance between city $v$ to destination. The guessing was also admissible since it is certain that the road route cannot be shorter than the euclidian distance between them\cite{HNR}.
 
 
 \subsection{Implementation}
@@ -182,7 +180,7 @@ Implementation is similar to Dijkstra, but the difference is that the Min-priori
 \li $\textsc{Initialize-Single-Source}(G,s)$
 \li $S = \emptyset$ \hspace{0.5cm}\Comment Set of vertices that shortest path from $s$ is known  
 \li $Q = \emptyset$ \hspace{0.5cm}\Comment Min-priority Queue sorted by cost $f$.
-\li                 \hspace{1.5cm}\Comment Q also holds unvisited vertices.
+\li                 \hspace{1.5cm}\Comment Q holds unvisited vertices.
 \li \For each vertex $u \in G.V$
 \li     \Do
             $\textsc{Insert}(Q,u)$
@@ -209,10 +207,36 @@ Implementation is similar to Dijkstra, but the difference is that the Min-priori
         \End
 \end{codebox}
 
+
+\section{Hierarchical A* algorithm}
+\subsection{A* algorithm for modern applications}
+In practice, a naive A* algorithm is still not sufficient for many modern applications. First, many modern applications require computation to happen in real-time for hundreds, if not thousands, users/agents simultaneously\cite{Botea2004NearOH}. Secondly, the shift to mobile applications has put more limitations on memory and CPU usage\cite{Botea2004NearOH}.
+For this reason, many variants of the A* algorithm such as IDA*, D*, etc have been proposed to combat the complexity of modern applications. Like many problems in computer science, one approach is to divide and conquer. That is, instead of running the A* algorithm in the whole graph, restructure the problem in a way to use the A* algorithm in a smaller sub-graph and then combine the result to find the shortest path from source to destination in an original graph. This is known as the Hierarchical A* algorithm.
+
+\subsection{Hierarchy}
+Section 3.2 give an illustration of how A* mimics the decision-making process of human by use of admissible heuristic. However, A* lack the arguably most important skill that human use: abstraction. Consider the following example of how a human might plan his/her trip from Virginia Tech to the University of Virginia. The example is adapted from \textit{Near Optimal Hierarchical Path-Finding} \cite{Botea2004NearOH}.
+\begin{enumerate}
+    \item Plan a route from Virginia Tech to a major highway entrance in Blacksburg.
+    \item Plan a route from Blacksburg to Charlottesville.
+    \item Plan a route from the highway exit in Charlottesville to the University of Virginia.
+\end{enumerate}
+In the above example, the complexity of finding a path from Virginia Tech to the University of Virginia was reduced in each step. The traveler only needs detailed maps for two cites \cite{Botea2004NearOH}, Blacksburg and Charlottesville. Once the traveler enters the highway, a simplified highway map can be used and ignore all other road details of other cities that pass by \cite{Botea2004NearOH}.
+
+Likewise, the idea of hierarchical A* is to form a region by clustering the vertices and introducing high-level regional routes. Then, the steps for finding a path from the source vertex to the destination vertex are (1) compute a local (low-level) route to the source vertex to the source region entrance, (2) compute a regional (high-level) route from the source region to destination region, and (3) compute a local (low-level) route to destination region exit to destination vertex.
+
+\subsection{Time optimization: All-pair shortest path}
+For applications where computational time is more critical than memory usage, caching technique can be used. That is, the shortest path between regions can be pre-computed for all regions and stored inside a table/matrix. The simplest form is to run Dijkstra on each region, but there are more sophisticated algorithms like Floyd-Warshall and Johnson. This is also known as finding an all-pair shortest path. As a result, finding a regional route from the source region to the destination region can be done in constant time during runtime. 
+
+\subsection{Near optimal path}
+One caveat of the hierarchical A* algorithm is that it does not guarantee the shortest path between the source and destination vertex. Using the human traveler analogy from section 4.2, a highway route may make travelers travel around the city, adding more distance needed to travel compared to traveling through city roads\cite{Botea2004NearOH}. The \textit{Near Optimal Hierarchical Path-Finding} apply a path-smoothing procedure to make a path found by hierarchical A* within $1\%$ optimal compared to shortest path\cite{Botea2004NearOH}.
+
+\subsection{Implementation}
+Implementers need to consider more variables like the number of hierarchy levels, cluster/region size, placement of regional entrances/exits, and choice of algorithm for the all-pair shortest path. For better results, path smoothing may be necessary as well.
+For some applications where an input graph is static and known in advance, manually configuring region size, and placing entrances/exits likely suffice. 
+
 \medskip
  
 \bibliographystyle{plain}
 \bibliography{references}
-
  
 \end{document}
