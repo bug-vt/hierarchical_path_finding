@@ -7,7 +7,7 @@ class PriorityQueue:
 
   def insert (self, new_node):
     for i in range (len (self.queue)):
-      if new_node.dist < self.queue[i].dist:
+      if new_node.cost < self.queue[i].cost:
         self.queue.insert (i, new_node)
         return
 

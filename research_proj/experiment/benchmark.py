@@ -6,17 +6,43 @@ from graph import buildGraph
 from graph import printGraph
 from graph import shortestPath 
 from graph import visitedNodesCount
-from dijkstra import dijkstra
-
+from astar import noHeuristic
+from astar import manhattan
+from astar import euclidian
+from astar import Astar
+from timeit import default_timer as time
 
 def main ():
+  print ("%s" % ("-" * 50))
+  print ("Benchmarking Hierarchical Path Finding")
+  print ("%s" % ("-" * 50))
 
+  print ("\nDijkstra")
   graph = buildGraph (TILE_MAP1)
-  printGraph (graph)
-  dijkstra (graph, graph[1][1]) 
-  path = shortestPath (graph, 30, 11)
-  printGraph (graph, path)
-  print (visitedNodesCount (graph))
 
+  # Running A* with no heuristic is equivalent to running Dijkstra
+  heuristic = noHeuristic
+  start = time ()
+  Astar (graph, heuristic, graph[1][20], graph[1][22]) 
+  path = shortestPath (graph, 22, 1)
+  duration = time () - start
+
+  printGraph (graph, path)
+  print ("# of visited nodes: %d" % visitedNodesCount (graph))
+  print ("Duration: %f ms" % (duration * 1000))
+
+  print ("\nA*")
+  graph = buildGraph (TILE_MAP1)
+
+  #heuristic = euclidian
+  heuristic = manhattan
+  start = time ()
+  Astar (graph, heuristic, graph[1][20], graph[1][22]) 
+  path = shortestPath (graph, 22, 1)
+  duration = time () - start
+
+  #printGraph (graph, path)
+  print ("# of visited nodes: %d" % visitedNodesCount (graph))
+  print ("Duration: %f ms" % (duration * 1000))
 if __name__ == "__main__":
   main ()

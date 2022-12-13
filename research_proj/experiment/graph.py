@@ -2,6 +2,7 @@ class Node:
   def __init__ (self, x, y, isWall=False):
     self.x = x
     self.y = y
+    self.cost = 100000000
     self.dist = 100000000
     self.parent = None
     self.isWall = isWall
