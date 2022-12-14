@@ -18,7 +18,7 @@ def Astar (graph, heuristic, source, dest, search_lim=100000):
   search_count = 0
   source.dist = 0
   source.cost = 0
-  visted = []
+  visited = []
   queue = PriorityQueue ()
   
   for y in range (len (graph)):
@@ -29,8 +29,8 @@ def Astar (graph, heuristic, source, dest, search_lim=100000):
   while not queue.empty ():
     search_count += 1
     current = queue.extractMin ()
-    visted.append (current)
-    if search_count >= search_lim:
+    visited.append (current)
+    if search_count > search_lim:
       break
     if current == dest:
       found = True

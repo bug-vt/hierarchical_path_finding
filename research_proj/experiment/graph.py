@@ -49,7 +49,10 @@ def printGraph (graph, path=None):
           print (" ", end="")
         continue
 
-      print (" ", end="")
+      if graph[y][x].parent:
+        print (".", end="")
+      else:
+        print (" ", end="")
     print ()
  
 def shortestPath (graph, x, y):

@@ -24,3 +24,9 @@ class PriorityQueue:
   def decreaseKey (self, node):
     self.pop (node)
     self.insert (node)
+
+  def printQ (self):
+    print ("----------------")
+    for node in self.queue:
+      print (node.x, node.y)
+    print ("----------------")
