@@ -30,8 +30,8 @@ def main ():
   print ("Duration: %f ms" % (duration * 1000))
 
   print ("\nA*")
-  #heuristic = euclidian
-  heuristic = manhattan
+  heuristic = euclidian
+  #heuristic = manhattan
   start = time ()
   path, search_count, found = Astar (graph, heuristic, (19,1), (31,23)) 
   duration = time () - start
@@ -42,10 +42,10 @@ def main ():
 
 
   print ("\nHierarchical Path Finding")
-  #heuristic = euclidian
-  heuristic = manhattan
+  heuristic = euclidian
+  #heuristic = manhattan
   start = time ()
-  path, search_count = hPathFind (graph, heuristic, (11,1), (31,21), 10) 
+  path, search_count = hPathFind (graph, heuristic, (18,1), (35,24), 10) 
   duration = time () - start
 
   printGraph (graph, path)

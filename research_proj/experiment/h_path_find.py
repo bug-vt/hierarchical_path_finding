@@ -27,13 +27,13 @@ def adjacentRegion (graph, node, size, local_lim, heuristic):
     local_visit_count += visit_count 
 
     if found:
-      #printGraph (graph, path)
-      neighbors.append ((Node (x + off_x, y + off_y, node), len (path)))
+      path[len (path) - 1].parent = node
+      neighbors.append ((Node (x + off_x, y + off_y, path[0].parent), len (path)))
 
   return neighbors, local_visit_count
 
 
-def hPathFind (graph, heuristic, source, dest, local_lim):
+def regionalAstar (graph, heuristic, source, dest, local_lim):
   region_size = 10
   total_visit_count = 0
   start = Node (source[0], source[1])
@@ -62,3 +62,17 @@ def hPathFind (graph, heuristic, source, dest, local_lim):
         queue.decreaseKey (neighbor)
 
   return path (current), total_visit_count
+
+
+def hPathFind (graph, heuristic, source, dest, local_lim):
+  total_visit_count = 0
+  source_region = ((source[0] // 10) * 10 + 1, (source[1] // 10) * 10 + 1)
+  dest_region = ((dest[0] // 10) * 10 + 1, (dest[1] // 10) * 10 + 1)
+
+  src2region, search_count1, found = Astar (graph, heuristic, source, source_region)
+  region_path, search_count2 = regionalAstar (graph, heuristic, source_region, dest_region, 10) 
+  region2dst, search_count3, found = Astar (graph, heuristic, dest_region, dest)
+
+  path = src2region + region_path + region2dst
+  search_cost = search_count1 + search_count2 + search_count3
+  return path, search_cost 
