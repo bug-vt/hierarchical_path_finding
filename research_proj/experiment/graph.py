@@ -28,14 +28,10 @@ def adjacent (graph, node):
   x = node.x
   y = node.y
 
-  if not graph[y - 1][x].isWall:
-    neighbors.append (graph[y - 1][x])
-  if not graph[y][x + 1].isWall:
-    neighbors.append (graph[y][x + 1])
-  if not graph[y + 1][x].isWall:
-    neighbors.append (graph[y + 1][x])
-  if not graph[y][x - 1].isWall:
-    neighbors.append (graph[y][x - 1])
+  offsets = [(-1,0), (0, 1), (1, 0), (0, -1)]
+  for off_y, off_x in offsets:
+    if not graph[y + off_y][x + off_x].isWall:
+      neighbors.append (graph[y + off_y][x + off_x])
 
   return neighbors
 

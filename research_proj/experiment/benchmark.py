@@ -4,7 +4,6 @@ from tile_map import TILE_MAP1
 from tile_map import TILE_MAP2
 from graph import buildGraph
 from graph import printGraph
-from graph import shortestPath 
 from graph import visitedNodesCount
 from astar import noHeuristic
 from astar import manhattan
@@ -23,8 +22,7 @@ def main ():
   # Running A* with no heuristic is equivalent to running Dijkstra
   heuristic = noHeuristic
   start = time ()
-  Astar (graph, heuristic, graph[1][20], graph[1][22]) 
-  path = shortestPath (graph, 22, 1)
+  found, path = Astar (graph, heuristic, graph[1][19], graph[23][31]) 
   duration = time () - start
 
   printGraph (graph, path)
@@ -37,11 +35,10 @@ def main ():
   #heuristic = euclidian
   heuristic = manhattan
   start = time ()
-  Astar (graph, heuristic, graph[1][20], graph[1][22]) 
-  path = shortestPath (graph, 22, 1)
+  found, path = Astar (graph, heuristic, graph[1][19], graph[1][22]) 
   duration = time () - start
 
-  #printGraph (graph, path)
+  printGraph (graph, path)
   print ("# of visited nodes: %d" % visitedNodesCount (graph))
   print ("Duration: %f ms" % (duration * 1000))
 if __name__ == "__main__":
