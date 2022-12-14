@@ -10,6 +10,7 @@ from astar import euclidian
 from astar import Astar
 from h_path_find import hPathFind
 from timeit import default_timer as time
+from visualizer import saveGraph2Img 
 
 def main ():
   print ("%s" % ("-" * 50))
@@ -22,22 +23,24 @@ def main ():
   # Running A* with no heuristic is equivalent to running Dijkstra
   heuristic = noHeuristic
   start = time ()
-  path, search_count, found = Astar (graph, heuristic, (19,1), (31,23)) 
+  path, search_count, found = Astar (graph, heuristic, (19,1), (33,23)) 
   duration = time () - start
 
-  printGraph (graph, path)
+  saveGraph2Img (graph, "visual/dijkstra.png", path) 
   print ("# of visited nodes: %d" % search_count)
+  print ("Path length: %d" % len (path))
   print ("Duration: %f ms" % (duration * 1000))
 
   print ("\nA*")
   heuristic = euclidian
   #heuristic = manhattan
   start = time ()
-  path, search_count, found = Astar (graph, heuristic, (19,1), (31,23)) 
+  path, search_count, found = Astar (graph, heuristic, (19,1), (33,23)) 
   duration = time () - start
 
-  printGraph (graph, path)
+  saveGraph2Img (graph, "visual/Astar.png", path) 
   print ("# of visited nodes: %d" % search_count)
+  print ("Path length: %d" % len (path))
   print ("Duration: %f ms" % (duration * 1000))
 
 
@@ -45,11 +48,12 @@ def main ():
   heuristic = euclidian
   #heuristic = manhattan
   start = time ()
-  path, search_count = hPathFind (graph, heuristic, (18,1), (35,24), 10) 
+  path, search_count = hPathFind (graph, heuristic, (19,1), (33,23), 10) 
   duration = time () - start
 
-  printGraph (graph, path)
+  saveGraph2Img (graph, "visual/hierarchical.png", path) 
   print ("# of visited nodes: %d" % search_count)
+  print ("Path length: %d" % len (path))
   print ("Duration: %f ms" % (duration * 1000))
 
 

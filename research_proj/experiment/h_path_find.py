@@ -7,6 +7,7 @@ from graph import Node
 from graph import path 
 from graph import haveVisited
 from graph import printGraph
+from graph import WALL
 
 
 def adjacentRegion (graph, node, size, local_lim, heuristic):
@@ -21,6 +22,9 @@ def adjacentRegion (graph, node, size, local_lim, heuristic):
     if x + off_x < 0 or x + off_x >= 42 or \
        y + off_y < 0 or y + off_y >= 42:
 
+      continue
+
+    if graph[y + off_y][x + off_x] == WALL:
       continue
 
     path, visit_count, found = Astar (graph, heuristic, (x,y), (x+off_x, y+off_y), search_lim=local_lim)
@@ -73,6 +77,6 @@ def hPathFind (graph, heuristic, source, dest, local_lim):
   region_path, search_count2 = regionalAstar (graph, heuristic, source_region, dest_region, 10) 
   region2dst, search_count3, found = Astar (graph, heuristic, dest_region, dest)
 
-  path = src2region + region_path + region2dst
+  path = region2dst + region_path + src2region 
   search_cost = search_count1 + search_count2 + search_count3
   return path, search_cost 

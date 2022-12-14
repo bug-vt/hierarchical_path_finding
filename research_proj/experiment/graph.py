@@ -1,3 +1,5 @@
+import numpy as np
+
 WALL = 1
 
 class Node:
@@ -16,13 +18,13 @@ class Node:
 def buildGraph (tile_map):
   graph = []  
   rows = tile_map.splitlines ()
+  graph = np.empty ([len (rows), len (rows[0])], dtype=np.int32)
   for y in range (len (rows)):
-    graph.append([])
     for x in range (len (rows[y])):
       if (rows[y][x] == "#"):
-        graph[y].append (WALL)
+        graph[y][x] = WALL
       else:
-        graph[y].append (0)    
+        graph[y][x] = 0
 
   return graph
 
