@@ -19,7 +19,7 @@ def saveGraph2Img (graph, file_name, path=[]):
       if graph[y][x] == WALL:
         color10x10 (pix, x, y, (0,0,0,255))
         continue
-      
+
       in_route = False
       for node in path:
         if x == node.x and y == node.y:
@@ -28,8 +28,7 @@ def saveGraph2Img (graph, file_name, path=[]):
           elif node == path[len (path) - 1]:
             color10x10 (pix, x, y, (0,0,255,255))
           else:
-            color10x10 (pix, x, y, (255,255,255,255))
-            #color10x10 (pix, x, y, (0,255,0,255))
+            color10x10 (pix, x, y, (0,255,0,255))
           in_route = True
           break
 

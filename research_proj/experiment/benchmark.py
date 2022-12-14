@@ -18,8 +18,8 @@ def main ():
   print ("%s" % ("-" * 50))
 
   graph = buildGraph (TILE_MAP1)
-  source = (5,35)
-  dest = (30, 25)
+  source = (34,11)
+  dest = (24, 33)
 
   print ("\nDijkstra")
   # Running A* with no heuristic is equivalent to running Dijkstra
