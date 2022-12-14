@@ -3,63 +3,62 @@ from astar import noHeuristic
 from astar import manhattan
 from astar import euclidian
 from astar import Astar
-from graph import shortestPath 
+from graph import Node
+from graph import path 
+from graph import haveVisited
 from graph import printGraph
-from graph import visitedNodesCount
-from tile_map import TILE_MAP1
-from tile_map import TILE_MAP2
-from graph import buildGraph
 
 
-def adjacentRegion (lv2_graph, graph, node, size, local_lim, heuristic):
-  visit_count = 0
+def adjacentRegion (graph, node, size, local_lim, heuristic):
+  local_visit_count = 0
   neighbors = []
   x = node.x 
   y = node.y
 
   offsets = [(-size,0), (0, size), (size, 0), (0, -size)]
   for off_y, off_x in offsets:
-    if x + off_x >= 0 and x + off_x < 42 and y + off_y >= 0 and y + off_y < 42:
-      graph = buildGraph (TILE_MAP1)
-      found, path = Astar (graph, heuristic, graph[y][x], graph[y+off_y][x+off_x]\
-                           ,search_lim = local_lim)
 
-      if found:
-        #printGraph (graph, path)
-        neighbors.append ((lv2_graph[y + off_y][x + off_x], len (path)))
-        visit_count += visitedNodesCount (graph)
+    if x + off_x < 0 or x + off_x >= 42 or \
+       y + off_y < 0 or y + off_y >= 42:
 
-  return neighbors, visit_count
+      continue
+
+    path, visit_count, found = Astar (graph, heuristic, (x,y), (x+off_x, y+off_y), search_lim=local_lim)
+    local_visit_count += visit_count 
+
+    if found:
+      #printGraph (graph, path)
+      neighbors.append ((Node (x + off_x, y + off_y, node), len (path)))
+
+  return neighbors, local_visit_count
 
 
-def hPathFind (lv2_graph, graph, heuristic, source, dest, local_lim):
-  found = False
+def hPathFind (graph, heuristic, source, dest, local_lim):
+  region_size = 10
   total_visit_count = 0
-  source.dist = 0
-  source.cost = heuristic (source, dest)
+  start = Node (source[0], source[1])
+  start.dist = 0
+  end = Node (dest[0], dest[1])
   visited = []
   queue = PriorityQueue ()
 
-  region_size = 10
-  for y in range (1, len (lv2_graph), region_size):
-    for x in range (1, len (lv2_graph[y]), region_size):
-      if not lv2_graph[y][x].isWall:
-        queue.insert (lv2_graph[y][x])
+  queue.insert (start)
 
   while not queue.empty ():
     current = queue.extractMin ()
     visited.append (current)
-    if current == dest:
-      found = True
+    if current.equal (end):
       break
     
-    neighbors, local_visit_count = adjacentRegion (lv2_graph, graph, current, region_size, local_lim*2, heuristic)
-    total_visit_count += local_visit_count
-    for node, weight in neighbors:
-      if node.dist > current.dist + weight:
-        node.dist = current.dist + weight
-        node.cost = node.dist + heuristic (node, dest)
-        node.parent = current
-        queue.decreaseKey (node)
+    neighbors, visit_count = adjacentRegion (graph, current, region_size, local_lim*2, heuristic)
+    total_visit_count += visit_count
+    for neighbor, weight in neighbors:
+      if haveVisited (visited, neighbor):
+        continue
 
-  return found, shortestPath (lv2_graph, dest.x, dest.y), total_visit_count
+      if neighbor.dist > current.dist + weight:
+        neighbor.dist = current.dist + weight
+        neighbor.cost = neighbor.dist + heuristic (neighbor, end)
+        queue.decreaseKey (neighbor)
+
+  return path (current), total_visit_count

@@ -8,7 +8,7 @@ from astar import noHeuristic
 from astar import manhattan
 from astar import euclidian
 from astar import Astar
-#from h_path_find import hPathFind
+from h_path_find import hPathFind
 from timeit import default_timer as time
 
 def main ():
@@ -22,7 +22,7 @@ def main ():
   # Running A* with no heuristic is equivalent to running Dijkstra
   heuristic = noHeuristic
   start = time ()
-  path, search_count = Astar (graph, heuristic, (19,1), (31,23)) 
+  path, search_count, found = Astar (graph, heuristic, (19,1), (31,23)) 
   duration = time () - start
 
   printGraph (graph, path)
@@ -33,7 +33,7 @@ def main ():
   #heuristic = euclidian
   heuristic = manhattan
   start = time ()
-  path, search_count = Astar (graph, heuristic, (19,1), (31,23)) 
+  path, search_count, found = Astar (graph, heuristic, (19,1), (31,23)) 
   duration = time () - start
 
   printGraph (graph, path)
@@ -41,19 +41,16 @@ def main ():
   print ("Duration: %f ms" % (duration * 1000))
 
 
-#  print ("\nHierarchical Path Finding")
-#  graph = buildGraph (TILE_MAP1)
-#  lv2_graph = buildGraph (TILE_MAP1)
-#
-#  #heuristic = euclidian
-#  heuristic = manhattan
-#  start = time ()
-#  found, path, visit_count = hPathFind (lv2_graph, graph, heuristic, lv2_graph[1][11], lv2_graph[21][31], 10) 
-#  duration = time () - start
-#
-#  printGraph (lv2_graph, path)
-#  print ("# of visited nodes: %d" % visit_count)
-#  print ("Duration: %f ms" % (duration * 1000))
+  print ("\nHierarchical Path Finding")
+  #heuristic = euclidian
+  heuristic = manhattan
+  start = time ()
+  path, search_count = hPathFind (graph, heuristic, (11,1), (31,21), 10) 
+  duration = time () - start
+
+  printGraph (graph, path)
+  print ("# of visited nodes: %d" % search_count)
+  print ("Duration: %f ms" % (duration * 1000))
 
 
 if __name__ == "__main__":

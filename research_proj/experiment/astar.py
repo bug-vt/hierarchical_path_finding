@@ -16,6 +16,7 @@ def euclidian (current, dest):
 
 
 def Astar (graph, heuristic, source, dest, search_lim=100000):
+  found = False
   search_count = 0
   start = Node (source[0], source[1])
   start.dist = 0
@@ -32,6 +33,7 @@ def Astar (graph, heuristic, source, dest, search_lim=100000):
     if search_count > search_lim:
       break
     if current.equal (end):
+      found = True
       break
 
     for neighbor in adjacent (graph, current):
@@ -43,6 +45,6 @@ def Astar (graph, heuristic, source, dest, search_lim=100000):
         neighbor.cost = neighbor.dist + heuristic (neighbor, end)
         queue.decreaseKey (neighbor)
 
-  return path (current), search_count
+  return path (current), search_count, found
 
         
