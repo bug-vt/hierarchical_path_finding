@@ -18,12 +18,14 @@ def main ():
   print ("%s" % ("-" * 50))
 
   graph = buildGraph (TILE_MAP1)
+  source = (5,35)
+  dest = (30, 25)
 
   print ("\nDijkstra")
   # Running A* with no heuristic is equivalent to running Dijkstra
   heuristic = noHeuristic
   start = time ()
-  path, search_count, found = Astar (graph, heuristic, (19,1), (33,23)) 
+  path, search_count, found = Astar (graph, heuristic, source, dest) 
   duration = time () - start
 
   saveGraph2Img (graph, "visual/dijkstra.png", path) 
@@ -35,7 +37,7 @@ def main ():
   heuristic = euclidian
   #heuristic = manhattan
   start = time ()
-  path, search_count, found = Astar (graph, heuristic, (19,1), (33,23)) 
+  path, search_count, found = Astar (graph, heuristic, source, dest) 
   duration = time () - start
 
   saveGraph2Img (graph, "visual/Astar.png", path) 
@@ -48,7 +50,7 @@ def main ():
   heuristic = euclidian
   #heuristic = manhattan
   start = time ()
-  path, search_count = hPathFind (graph, heuristic, (19,1), (33,23), 10) 
+  path, search_count = hPathFind (graph, heuristic, source, dest, 10) 
   duration = time () - start
 
   saveGraph2Img (graph, "visual/hierarchical.png", path) 

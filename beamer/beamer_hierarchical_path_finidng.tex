@@ -40,7 +40,7 @@ You want to avoid path from $S$ to $D$ that are
 
 \subsection{Grid graph}
 \frame{\frametitle{Viewing world with grid graph} 
-Imagine world is made of grid, like mindcraft...
+Imagine world is made of grid, like Mindcraft...
 
 \begin{figure} 
 \centering
@@ -49,15 +49,25 @@ Imagine world is made of grid, like mindcraft...
 }
 
 \frame{\frametitle{Viewing world with grid graph} 
-Each vertex have degree 4 and edges are undirected with weight 1.
+\begin{itemize}
+  \item Each cell is a vertex and has an edge to adjacent cells.
+  \item No edges between cells and walls/obstacles
+  \item So, each vertex can have up to degree 4 and edges are undirected with weight 1.
+\end{itemize}
 
 \begin{figure} 
 \centering
 \includegraphics[scale=0.4]{imgs/adjacency.png}
 \end{figure}
-We will come back to the grid graph later...
 }
 
+\frame{\frametitle{Back to path finding} 
+Now, using the grid graph, how can we find the shortest path from $S$ to $D$?
+\begin{figure} 
+\centering
+\includegraphics[scale=0.4]{imgs/start_and_end.png}
+\end{figure}
+}
 
 \section{Shortest path algorithms}
 \subsection{Dijkstra}
@@ -72,14 +82,72 @@ We will come back to the grid graph later...
 \includegraphics[scale=0.5]{imgs/shortest_path_tree.png}
 \caption{(a) A weighted, directed graph with source $s$. (b) The blue edges represent the shortest-path tree rooted at the source $s$. The figure was taken from \textit{Introduction to Algorithms} by CLRS\cite{CLRS}.} 
 \end{figure}
+}
 
+\frame{\frametitle{Dijkstra Algorithm}
+Dijkstra algorithm is a type of greedy algorithm where it makes a locally optimal decision in each step. The following describe the high-level idea:
+
+\begin{enumerate}
+    \item At first, the source vertex only knows the distance to its neighbors and treats other vertices as if they are infinitely far away. 
+    \item Among the univisited vertices, visit the vertex that is closest to the source vertex. That is, add the selected vertex to the shortest path tree and mark visited.
+    \item Then, updates the distance to the vertices that are now reachable (but still unvisited) by the newly visited vertex. 
+    \item Repeats the step 2-3 until it reached destination or all the vertex get marked visited.
+\end{enumerate}
+}
+
+\frame{\frametitle{Dijkstra in action}
+Step 1. Inititally, Dijkstra only know the distance to the neighbors of the source.
+\begin{figure} 
+\centering
+\includegraphics[scale=0.4]{imgs/dijkstra_step1.png}
+\end{figure}
+}
+
+\frame{\frametitle{Dijkstra in action}
+Step 2. Visit the closest vertex from the source. In this case we just picked the upper cell from the 4 closest vertices.
+\begin{figure} 
+\centering
+\includegraphics[scale=0.4]{imgs/dijkstra_step2.png}
+\end{figure}
+}
+
+\frame{\frametitle{Dijkstra in action}
+Step 3. Updates the distance to the vertices that are now reachable (but still unvisited) by the newly visited vertex. 
+\begin{figure} 
+\centering
+\includegraphics[scale=0.4]{imgs/dijkstra_step3.png}
+\end{figure}
+}
+
+\frame{\frametitle{Dijkstra in action}
+Step 4. Repeats the step 2-3 until it reached destination or all the vertex get marked visited.
+\begin{figure} 
+\centering
+\includegraphics[scale=0.4]{imgs/dijkstra_step4.png}
+\end{figure}
+}
+
+\frame{\frametitle{Dijkstra in action}
+So when we are done, we might get something like this:
+\begin{figure} 
+\centering
+\includegraphics[scale=0.4]{imgs/dijkstra_done.png}
+\end{figure}
+}
+
+\frame{\frametitle{Shortcoming of Dijkstra}
+Dijkstra will find the shortest path eventually (proof can be seen at our research paper). However, we can see some shortcomings:
+\begin{itemize}
+  \item We were evaluating path that were "obviously" not part of the shortest path.
+  \item Why find shortest path to all vertices when we only need to find one to $D$?
+\end{itemize}
 }
 
 \subsection{A*}
 \frame{\frametitle{A*}
 \begin{itemize}
   \item "Dijkstra with a twist" \cite{Buckland}
-  \item Dijkstra algorithm blindly selects vertex with minimum distance from $s$ each step. Instead, make a clever guess in each step where the algorithm selects a vertex that is likely part of the shortest path from $s$ to $t$.\cite{Buckland, HNR}
+  \item Dijkstra algorithm blindly selects vertex with minimum distance from $S$ each step. Instead, make a clever guess in each step where the algorithm selects a vertex that is likely part of the shortest path from $S$ to $D$.\cite{Buckland, HNR}
 \end{itemize}
 }
 \frame{\frametitle{A*: Clever guess?}
@@ -92,9 +160,65 @@ For A* to work correctly and efficiently, the A* algorithm must guess each step 
 \end{itemize}
 }
 
-\subsection{Shortcomings}
-\frame{\frametitle{Shortcomings}
-In practice, a naive A* algorithm is still not sufficient for many modern applications. 
+\frame{\frametitle{A* Algorithm}
+The algorithm is almost the same as Dijkstra. Only difference is the step 2:
+
+\begin{enumerate}
+    \item ...
+    \item Among the univisited vertices, visit the vertex that have the \textbf{lowest cost $f$} to the source vertex. 
+    \item ...
+    \item ...
+\end{enumerate}
+}
+
+\frame{\frametitle{Cost?}
+We define the cost of the vertex as a following:
+\[ f(v) = g(v) + h(v) \]
+\begin{itemize}
+  \item $f(v) = $ total cost of the vertex $v$.
+  \item $g(v) = $ exact distance from source to vertex $v$.
+  \item $h(v) = $ estimated distance from vertex $v$ to destination. We will use euclidian distance between $v$ and $D$ as our estimation.
+\end{itemize}
+}
+
+\frame{\frametitle{A* in action}
+Let's revisit the step 2 of Dijkstra.
+\begin{figure} 
+\centering
+\includegraphics[scale=0.4]{imgs/dijkstra_step1.png}
+\end{figure}
+}
+
+\frame{\frametitle{A* in action}
+Instead of looking for the vertex that are closest to the source, look for the lowest cost $f$ as shown below.
+\begin{figure} 
+\centering
+\includegraphics[scale=0.4]{imgs/astar_step1.PNG}
+\end{figure}
+}
+
+\frame{\frametitle{A* in action}
+Clearly, the winner is the right hand side vertex. \begin{figure} 
+\centering
+\includegraphics[scale=0.4]{imgs/astar_step2.PNG}
+\end{figure}
+}
+
+\frame{\frametitle{A* in action}
+This is similar to how human think, where we would unlikely consider traveling to a vertex in the opposite direction of a destination even if it is located close to the source. Rather, we would consider a nearby vertex closer to the destination unless it is deadend. 
+}
+
+\frame{\frametitle{Dijkstra in action}
+So when we are done, we might get something like this:
+\begin{figure} 
+\centering
+\includegraphics[scale=0.4]{imgs/astar_done.png}
+\end{figure}
+}
+ 
+
+\frame{\frametitle{Shortcomings of A*}
+In practice, a naive A* algorithm is still not sufficient for many modern applications with large network. 
 \begin{enumerate}
   \item Many modern applications require computation to happen in real-time for hundreds, if not thousands, users/agents simultaneously\cite{Botea2004NearOH}.
   \item The shift to mobile applications has put more limitations on memory and CPU usage\cite{Botea2004NearOH}.
@@ -103,19 +227,34 @@ In practice, a naive A* algorithm is still not sufficient for many modern applic
 
 \section{Hierarchical Path Finding}
 \subsection{Using hierarchy to reduce complexity}
+\frame{\frametitle{Hierarchical Path Finding}
+So instead of running a shortest path algorithm on a large network, we run the shortest path algorithm inside the regional, more coarse grain, network. 
+}
 \frame{\frametitle{Using hierarchy to reduce compleixty}
-The idea of Hierarchical Path Finding is to form a region by clustering the vertices and introducing high-level regional routes. 
-\begin{enumerate}
-  \item Compute a local (low-level) route to the source to the source region entrance, 
-  \item Compute a regional (high-level) route from the source region to destination region, and 
-  \item Compute a local (low-level) route to destination region exit to destination.
-\end{enumerate}
+The idea of Hierarchical Path Finding is to create a regional graph, then running a shortest path algorithm between the regions. 
 
 \begin{figure} 
 \centering
-\includegraphics[scale=0.2]{imgs/hierarchy.png}
+\includegraphics[scale=0.3]{imgs/hierarchy.png}
 \caption{Forming regions (high-level graph) by clustering neighboring vertices. The figure was taken from \textit{Programming Game AI by Example} by Buckland\cite{Buckland}.} 
 \end{figure}
+}
+
+\frame{\frametitle{How human use Hierarchial Path Finding in real life}
+\begin{enumerate}
+    \item Plan a route from Virginia Tech to a major highway entrance in Blacksburg.
+    \item Plan a route from Blacksburg to Charlottesville.
+    \item Plan a route from the highway exit in Charlottesville to the University of Virginia.
+\end{enumerate}
+}
+
+\frame{\frametitle{Hierarchical Path Finding algorithm}
+We apply the similar idea for our grid graph
+\begin{enumerate}
+  \item Run A* from source to the source regional entrance, 
+  \item Run A* on regional level, from the source region to destination region, and 
+  \item Run A* from destination region exit to destination.
+\end{enumerate}
 }
 
 \subsection{Challenges}
@@ -133,7 +272,7 @@ To avoid overwhelming the algorithm with optimization details, our implementatio
 \begin{enumerate}
   \item An input graph is static and known in advance, 
   \item 2 level of the hierarchy, 
-  \item Randomly distributes regional entrances/exits in reachable locations, 
+  \item Preselected regional entrances/exits in reachable locations, 
   \item No preprocessing/caching, and 
   \item No path refinement or smoothing.
 \end{enumerate}
@@ -149,13 +288,13 @@ To avoid overwhelming the algorithm with optimization details, our implementatio
 }
 \frame{\frametitle{Experiment results}
 \begin{center}
-\begin{tabular}{| c | c | c |}
+\begin{tabular}{| c | c | c | c | }
     \hline
-    Algorithm & \# of vertices visited & Time (ms) \\
+     & Dijkstra & A* & Hierarchical Path Finding \\
     \hline
-    Dijkstra & 0 & 0 \\
-    A* & 0 & 0 \\
-    Hierarchical Path Finding & 0 & 0 \\
+    \# of vertices visited & 0 & 0 & 0 \\
+    Path length & 0 & 0 & 0 \\
+    Time (ms) & 0 & 0 & 0 \\
     \hline
 \end{tabular}
 \end{center}
