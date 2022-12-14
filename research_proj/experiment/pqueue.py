@@ -18,7 +18,7 @@ class PriorityQueue:
 
   def pop (self, node):
     for i in range (len (self.queue)):
-      if node == self.queue[i]:
+      if node.equal(self.queue[i]):
         return self.queue.pop (i)
 
   def decreaseKey (self, node):

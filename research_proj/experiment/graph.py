@@ -1,11 +1,16 @@
+WALL = 1
+
 class Node:
-  def __init__ (self, x, y, isWall=False):
+  def __init__ (self, x, y, parent=None):
     self.x = x
     self.y = y
     self.cost = 100000000
     self.dist = 100000000
-    self.parent = None
-    self.isWall = isWall
+    self.parent = parent 
+
+  def equal (self, node):
+    return self.x == node.x and self.y == node.y
+
 
 
 def buildGraph (tile_map):
@@ -14,12 +19,10 @@ def buildGraph (tile_map):
   for y in range (len (rows)):
     graph.append([])
     for x in range (len (rows[y])):
-      isWall = False
       if (rows[y][x] == "#"):
-        isWall = True
-
-      node = Node (x, y, isWall)
-      graph[y].append (node)    
+        graph[y].append (WALL)
+      else:
+        graph[y].append (0)    
 
   return graph
 
@@ -30,45 +33,43 @@ def adjacent (graph, node):
 
   offsets = [(-1,0), (0, 1), (1, 0), (0, -1)]
   for off_y, off_x in offsets:
-    if not graph[y + off_y][x + off_x].isWall:
-      neighbors.append (graph[y + off_y][x + off_x])
+    if graph[y + off_y][x + off_x] != WALL:
+      neighbors.append (Node (x + off_x, y + off_y, node))
 
   return neighbors
 
-def printGraph (graph, path=None):
+def haveVisited (visited, current):
+  for node in visited:
+    if node.equal (current):
+      return True
+
+  return False
+
+def printGraph (graph, path=[]):
   for y in range (len (graph)):
     for x in range (len (graph[y])):
-      if graph[y][x].isWall:
+      if graph[y][x] == WALL:
         print ("#", end="")
         continue
-
-      if path:
-        if (graph[y][x] in path):
+      
+      in_route = False
+      for node in path:
+        if x == node.x and y == node.y:
           print (".", end="")
-        else:
-          print (" ", end="")
-        continue
+          in_route = True
+          break
 
-      if graph[y][x].parent:
-        print (".", end="")
-      else:
+      if not in_route: 
         print (" ", end="")
+
     print ()
  
-def shortestPath (graph, x, y):
-  current = graph[y][x]
-  path = [current]
-  while current.parent != None:
-    path.append (current.parent)
+def path (node):
+  current = node
+  path = []
+  while current != None:
+    path.append (current)
     current = current.parent
 
   return path
 
-def visitedNodesCount (graph):
-  node_count = 0 
-  for y in range (len (graph)):
-    for x in range (len (graph[y])):
-      if not graph[y][x].isWall and graph[y][x].parent != None:
-        node_count += 1
-
-  return node_count

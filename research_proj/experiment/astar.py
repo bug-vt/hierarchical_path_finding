@@ -1,7 +1,8 @@
 from pqueue import PriorityQueue
 from graph import Node
 from graph import adjacent
-from graph import shortestPath 
+from graph import path 
+from graph import haveVisited
 import math
 
 def noHeuristic (current, dest):
@@ -13,34 +14,35 @@ def manhattan (current, dest):
 def euclidian (current, dest):
   return math.sqrt ((dest.x - current.x)**2 + (dest.y - current.y)**2) 
 
+
 def Astar (graph, heuristic, source, dest, search_lim=100000):
-  found = False
   search_count = 0
-  source.dist = 0
-  source.cost = 0
+  start = Node (source[0], source[1])
+  start.dist = 0
+  end = Node (dest[0], dest[1])
   visited = []
   queue = PriorityQueue ()
   
-  for y in range (len (graph)):
-    for x in range (len (graph[y])):
-      if not graph[y][x].isWall:
-        queue.insert (graph[y][x])
-
+  queue.insert (start)
+  
   while not queue.empty ():
     search_count += 1
     current = queue.extractMin ()
     visited.append (current)
     if search_count > search_lim:
       break
-    if current == dest:
-      found = True
+    if current.equal (end):
       break
 
-    for node in adjacent (graph, current):
-      if node.dist > current.dist + 1:
-        node.dist = current.dist + 1
-        node.cost = node.dist + heuristic (node, dest)
-        node.parent = current
-        queue.decreaseKey (node)
+    for neighbor in adjacent (graph, current):
+      if haveVisited (visited, neighbor):
+        continue
+      
+      if neighbor.dist > current.dist + 1:
+        neighbor.dist = current.dist + 1
+        neighbor.cost = neighbor.dist + heuristic (neighbor, end)
+        queue.decreaseKey (neighbor)
 
-  return found, shortestPath (graph, dest.x, dest.y)
+  return path (current), search_count
+
+        
