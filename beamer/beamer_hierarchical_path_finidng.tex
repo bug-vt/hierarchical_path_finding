@@ -2,7 +2,7 @@
 \begin{document}
 \title{Hierarchical Path-Finding}
 \author{Addie Audette, Bug Lee, Annorah Lewis, Luke Marks}
-\date{December 12, 2022} 
+\date{December 14, 2022} 
 
 \frame{\titlepage} 
 
@@ -231,7 +231,7 @@ In practice, a naive A* algorithm is still not sufficient for many modern applic
 So instead of running a shortest path algorithm on a large network, we run the shortest path algorithm inside the regional, more coarse grain, network. 
 }
 \frame{\frametitle{Using hierarchy to reduce compleixty}
-The idea of Hierarchical Path Finding is to create a regional graph, then running a shortest path algorithm between the regions. 
+The idea of Hierarchical Path Finding is to create a regional graph, then running a shortest path algorithm between the regions instead for all vertices. 
 
 \begin{figure} 
 \centering
@@ -378,13 +378,17 @@ To avoid overwhelming the algorithm with optimization details, our implementatio
 }
 
 
-\section{Limitations}
-\subsection{Near optimal path}
+\subsection{Limitations}
 \frame{\frametitle{Limitations}
 \begin{itemize}
   \item Hierarchical Path Finding does not guarantee the shortest path between the source and destination. 
   \item The \textit{Near Optimal Hierarchical Path-Finding} apply a path-smoothing procedure to make a path found by Hierarchical Path Finding within $1\%$ optimal compared to shortest path\cite{Botea2004NearOH}.
 \end{itemize}
+}
+
+\section{Source code}
+\frame{\frametitle{Source code}
+The code was written in Python and can be found at: \url{https://github.com/bug-vt/Hierarchical_path_finding}
 }
 
 \frame{\frametitle{References}

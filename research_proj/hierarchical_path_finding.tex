@@ -23,18 +23,19 @@
 \title{Topic: Hierarchical Path-Finding}
 \titleheader{Research Paper on Hierarchical Path-Finding}
 \author{Addie Audette, Bug Lee, Annorah Lewis, Luke Marks}
-\date{December 3, 2022}
+\date{December 14, 2022}
 
 \begin{document}
 \maketitle
 
 \section{Introduction}
 \subsection{The Motivation}
-The problem of finding an optimal path arises in many application domains including navigation, robotics, networking, and video games. There are different flavors of algorithms that correctly find the shortest path between two nodes in a graph.  
+The problem of finding an optimal path arises in many application domains including navigation, robotics, networking, and video games. There are different flavors of algorithms that correctly find the shortest (or near shortest) path between two or more nodes in a graph.  
 
-In an unweighted graph, Breath-first search (BFS) is the go-to algorithm\cite{Erickson}. For a more general graph where an edge weight can contain either a positive or negative value, the Bellman-Ford algorithm is capable of finding the shortest path between two nodes\cite{Erickson}. However, when the problem domain is restricted to only containing non-negative edge weights, the Dijkstra can find the shortest path with less computation demand than the Bellman-Ford\cite{Erickson}. Nowadays, the A* algorithm, the successor of Dijkstra, is more commonly used as it demands even less computation with the help of an admissible heuristic function.
+Two algorithms, Dijkstra and A*, are widely known and guarantee to find the shortest path in general cases. When the problem domain is restricted to only containing non-negative edge weights, the Dijkstra can find the shortest path to all vertices that are connected to the graph\cite{Erickson}. On the other hand, the A* algorithm, the successor of Dijkstra, is generally more suitable for application as it demands less computation with the help of an admissible heuristic function.
 
 However, the naive A* algorithm is no longer sufficient for modern real-time applications. Given the sheer number of the nodes for the graph in modern applications, computation demands are too high to run a naive A* algorithm simultaneously for hundreds, if not thousands, of agents \cite{Botea2004NearOH}. Thus, like many problems in computer science, adding a hierarchy is a solution to reduce the complexity of the problem.
+
 
 \section{Dijkstra algorithm}
 \subsection{Shortest-path tree}
@@ -142,9 +143,9 @@ The above modification on Dijkstra is known as the A* algorithm. Given that the 
 For A* to work correctly and efficiently, the A* algorithm must guess each step that
 \begin{itemize}
     \item Heuristic: \\
-    Minimize unnecessary computation on finding sub-paths that are obviously not part of the optimal path\cite{HNR}, but also 
-    \item Admissiblity: \\
-    Should not ignore the sub-path that can be part of the optimal path\cite{HNR}.  
+    Minimize unnecessary exploration on finding sub-paths that are obviously not part of the optimal path\cite{HNR}, but also 
+    \item Admissibility: \\
+    Should not ignore the sub-path that can be part of the optimal path\cite{HNR}. 
 \end{itemize}
 In many situations, there is extra information available for the given problem domain other than the distance between two vertices. For example, imagine finding the shortest route between two cities in the road network. Not only do we know the distance between two pairs of cities, but also know how all cities are positioned on the map. From this, we would unlikely consider traveling to a city in the opposite direction of a destination even if it is located close to the source. Rather, we would consider a nearby city closer to the destination unless it is deadend. 
 
@@ -238,14 +239,15 @@ Likewise, the idea of Hierarchical Path Finding is to form a region by clusterin
 
 
 \subsection{Time optimization: All-pair shortest path}
-For applications where computational time is more critical than memory usage, caching technique can be used\cite{Buckland}. That is, the shortest path between regions can be pre-computed for all regions and stored inside a table/matrix. The simplest form is to run Dijkstra on each region, but there are more sophisticated algorithms like Floyd-Warshall and Johnson. This is also known as finding an all-pair shortest path. As a result, finding a regional route from the source region to the destination region can be done in constant time during runtime. 
+For applications where computational time is more critical than memory usage, caching technique can be used\cite{Buckland}. That is, the shortest path between regions can be pre-computed for all regions and stored inside a table/matrix. The simplest form is to run Dijkstra on each region, but more sophisticated algorithms should be used in practice. This is also known as finding an all-pair shortest path. Once stored inside a table/matrix, finding a regional route from the source region to the destination region can be performed in constant time during runtime. 
+
 
 \subsection{Near optimal path}
 One caveat of the Hierarchical Path Finding algorithm is that it does not guarantee the shortest path between the source and destination vertex. Using the human traveler analogy from section 4.2, a highway route may make travelers travel around the city, adding more distance needed to travel compared to traveling through city roads\cite{Botea2004NearOH}. The \textit{Near Optimal Hierarchical Path-Finding} apply a path-smoothing procedure to make a path found by Hierarchical Path Finding within $1\%$ optimal compared to shortest path\cite{Botea2004NearOH}.
 
 \subsection{Implementation}
 Compare to Dijkstra and naive A*, there are more tunable variables that implementers need to consider; the number of hierarchy levels, cluster/region size, and placement of regional entrances/exits. In practice, optimizations like preprocessing/caching regional routes and path smoothing may be necessary.
-To avoid overwhelming the algorithm with optimization details, our implementation assume the following simplifications: (1) an input graph is static and known in advance, (2) 2 level of the hierarchy, (3) randomly distributes regional entrances/exits in reachable locations, (4) no preprocessing/caching, and (5) no path refinement or smoothing.
+To avoid overwhelming the algorithm with optimization details, our implementation assumes the following simplifications: (1) an input graph is static and known in advance, (2) 2 levels of the hierarchy, (3) preselecting regional entrances/exits in reachable locations, (4) no preprocessing/caching, and (5) no path refinement or smoothing.
 
 
 \subsection{Pseudocode}
@@ -274,6 +276,11 @@ To avoid overwhelming the algorithm with optimization details, our implementatio
 \li 
 \li \Return $Path$
 \end{codebox}
+
+
+\section{Conclusion}
+The Dijkstra and A* have their strong points and cannot argue that one is better than the other in all situations. However, knowing that most applicants do not need additional computation for finding a path to all vertices from the source, A* became a preferred method of the path-finding algorithm in most cases. Hierarchical Path Finding follows the similar footstep. Many applications nowadays are more constrained by the resource than optimality, allowing Hierarchical Path Finding to rise despite its additional complexity and non-optimality. For our next step, we plan to implement and showcase the three algorithms, Dijkstra, A*, and Hierarchical Path Finding discussed in this paper. Throughout the process, we will explore whether the performance of Hierarchical Path Finding is worth the additional complexity.
+
 
 \medskip
  
