@@ -3,6 +3,15 @@
 #### Members: Addie Audette, Bug Lee, Annorah Lewis, Luke Marks
 #### Last updated: December 2022
 
+- [Hierarchical Path Finding](#hierarchical-path-finding)
+      - [Members: Addie Audette, Bug Lee, Annorah Lewis, Luke Marks](#members-addie-audette-bug-lee-annorah-lewis-luke-marks)
+      - [Last updated: December 2022](#last-updated-december-2022)
+  - [Introduction](#introduction)
+  - [Our research Paper](#our-research-paper)
+  - [Beamer Presentation](#beamer-presentation)
+  - [Running experiments](#running-experiments)
+  - [My roles and contribution](#my-roles-and-contribution)
+
 ## Introduction
 The problem of finding an optimal path arises in many application domains including navigation, robotics, networking, and video games. There are different flavors of algorithms that correctly find the shortest (or near shortest) path between two or more nodes in a graph.
 
@@ -22,3 +31,10 @@ Go to the `research_proj/experiment` directory and then run
 ./benchmark.py
 ```
 Visual results from the benchmark will be located at `research_proj/experiment/visual`.
+
+## My roles and contribution
+This was a group final project for Math 3134, applied combinatorics, taught by Kelli Karcher.
+
+The project was proposed and led by me, Bug Lee. I was the main writer for the research paper, presentation, and code for A* and the Hierarchical Path Finding algorithm. Dijkstra algorithm was written together with Luke Marks, who wrote the base code and tested for a smaller (10x10) grid graph. Visualizer was proposed and written by Addie Audette. Annorah assisted the team with editing and proofreading the research paper.
+
+Special thanks to Professor Karcher who supervised the project and provided helpful feedback.
